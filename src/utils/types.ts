@@ -8,6 +8,10 @@ export interface InputProps {
     headerText: string;
 }
 
+export interface ModalProps {
+    candidates: Candidate[];
+}
+
 export type Candidate = {
     name: string;
     role: EnumRole | string,

@@ -6,18 +6,17 @@ import loadingAnimation from "../../assets/loadingAnimation.json"
 import candidatesJson from "../../services/dataset.json"
 import { Candidate, EnumRole } from "../../utils/types";
 import { getEnumRoleElements } from "../../utils/helpers";
+import Modal from "../../components/Modal";
 
 export default function Vote() {
-    const [isLoading, setLoading] = useState(true);
+    const [isLoading, setLoading] = useState(false);
     const candidatesList: Candidate[] = candidatesJson.candidates;
-    const roles: EnumRole[] = getEnumRoleElements();
+    const enumRoles: EnumRole[] = getEnumRoleElements();
+    const [index, setIndex] = useState(0);
 
-    useEffect(() => {
-        console.log(roles[0]);
-        console.log(candidatesList[0].role);
-
-        setTimeout(() => { setLoading(false) }, 1000);
-    }, []);
+    // useEffect(() => {
+    //     setTimeout(() => { setLoading(false) }, 2000);
+    // }, []);
 
     function handleVote() {
         console.log("teste");
@@ -40,18 +39,15 @@ export default function Vote() {
                 <Header />
 
                 <TitleText>
-                    Informe o número do seu candidato para {candidatesList[0].role}👇
+                    Informe o número do seu candidato para {enumRoles[index]}👇
                 </TitleText>
-                {candidatesList.map(candidate => (
-                    candidate.role == roles[0].toUpperCase() ?
-                        <>
-                            <Input headerText={`Candidato ${candidate.name}`} />
-                        </>
-                        : false
-                ))}
 
+                <Modal candidates={candidatesList} />
+
+                <Input headerText={"Informe o número do candidato"} />
+                
                 <Button onPress={() => handleVote()}>
-                    Votar
+                    Confirmar
                 </Button>
             </Container>
     );

@@ -16,5 +16,5 @@ export const LottieFile = styled(LottieView)`
 export const TextVote = styled.Text`
     font-size: 36px;
     margin-top: -42%;
-    color: #9606cf;
+    color: #9606CF;
 `;

@@ -9,20 +9,19 @@ export const Container = styled.SafeAreaView`
 `;
 
 export const Header = styled.View`
-    margin-top: 64px;
+    margin: 10% 0px;
 `;
 
 export const TitleText = styled.Text`
-    width: 100%;
     text-align: center;
     font-size: 28px;
-    color: #9606cf;
+    color: #9606CF;
 `;
 
 export const LoadingText = styled.Text`
     text-align: center;
     font-size: 28px;
-    color: #9606cf;
+    color: #9606CF;
     `;
 
 export const LottieFile = styled(LottieView)`

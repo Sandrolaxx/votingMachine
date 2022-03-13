@@ -1,23 +1,34 @@
 import React from "react";
 import { SetStateAction, useState } from "react";
+import { Keyboard } from "react-native";
 import { InputProps } from "../../utils/types";
-import { HeaderTitle, InputVote, SearchBox } from "./styles";
+import Button from "../Button";
+import { HeaderTitle, InputVote, Container } from "./styles";
 
-export default function Input({headerText}: InputProps) {
-    const [firstVote, setFirstVote] = useState<string>();
+export default function Input({ headerText,  handleVote}: InputProps) {
+    const [candidateCode, setCandidateCode] = useState<number>();
+
+    function performVote() {
+        Keyboard.dismiss();
+        setCandidateCode(undefined);
+
+        handleVote(candidateCode);
+    }
 
     return (
-        <SearchBox>
+        <Container>
             <HeaderTitle>
                 {headerText}
             </HeaderTitle>
             <InputVote
                 keyboardType="numeric"
-                maxLength={4}
-                value={firstVote}
-                onChangeText={(value: SetStateAction<string | undefined>) => setFirstVote(value)}
-                placeholder="Insira um número"
+                maxLength={2}
+                value={candidateCode}
+                onChangeText={(value: SetStateAction<number | undefined>) => setCandidateCode(value)}
             />
-        </SearchBox>
+            <Button onPress={() => performVote()}>
+                Confirmar
+            </Button>
+        </Container>
     );
 }

@@ -6,15 +6,20 @@ export interface ButtonProps extends RectButtonProperties {
 
 export interface InputProps {
     headerText: string;
+    handleVote: Function;
 }
 
 export interface ModalProps {
     candidates: Candidate[];
 }
 
+export type Candidates = {
+    candidates: Candidate[];
+}
+
 export type Candidate = {
     name: string;
-    role: EnumRole | string,
+    role: EnumRole,
     code: number;
     votesNumber: number;
     politicalParty: string;

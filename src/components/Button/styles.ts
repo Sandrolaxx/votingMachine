@@ -3,12 +3,11 @@ import styled from "../../../node_modules/styled-components/native";
 export const Container = styled.TouchableOpacity`
     height: 50px;
     width: 142px;
-    background: #9606cf;
+    background: #9606CF;
     border-radius: 15px;
-
     justify-content: center;
     align-items: center;
-    margin-top: 25%;
+    margin-top: 16%;
 `;
 
 export const ButtonText = styled.Text`

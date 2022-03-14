@@ -31,3 +31,7 @@ export const LineSeparator = styled.Text`
     border-top-width: 1.5px;
     margin-top: 14px;
 `
+
+export const ModalButtonArea = styled.View`
+    flex-flow: row;
+`

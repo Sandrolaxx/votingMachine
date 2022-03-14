@@ -54,3 +54,19 @@ export async function saveVotes(db: SQLiteDatabase, candidates: Candidate[]) {
 
     return db.executeSql(sqlQuery);
 }
+
+export async function updateVotes(db: SQLiteDatabase, candidate: Candidate) {
+    const sqlQuery = `UPDATE ${tableName} 
+                        SET votesNumber = ${candidate.votesNumber + 1}  
+                      WHERE code = ${candidate.code}` ;
+    
+    console.log(sqlQuery);
+
+    return db.executeSql(sqlQuery);
+}
+
+export async function deleteAllVotes(db: SQLiteDatabase) {
+    const sqlQuery = `DELETE FROM ${tableName}` ;
+    
+    return db.executeSql(sqlQuery);
+}

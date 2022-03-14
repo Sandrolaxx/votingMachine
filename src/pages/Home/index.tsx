@@ -1,31 +1,34 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Container, LottieFile, TextVote } from "./styles";
-import votingAnimation from "../../assets/votingAnimation.json"
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import votingAnimation from "../../assets/votingAnimation.json";
 import Button from "../../components/Button";
-import { useNavigation } from "@react-navigation/native";
+import ModalCandidates from "../../components/ModalCandidates";
 import { getDBConnection, listCandidates } from "../../services/SQLiteConnection";
 import { Candidate } from "../../utils/types";
+import { Container, LottieFile, TextVote } from "./styles";
 
 export default function Home() {
     const navigation = useNavigation<any>();
     const [isContainVotes, setContainVotes] = useState(false);
+    const [isShowModal, setShowModal] = useState(false);
     const [candidatesList, setCandidatesList] = useState<Candidate[]>([]);
 
     useEffect(() => {
         loadDataCallback();
-    }, []);
+    }, [useIsFocused()]);
 
     function handleNavigate() {
-        navigation.navigate("Vote");
+        navigation.navigate("Vote", {isContainVotes});
     }
 
     async function loadDataCallback() {
         try {
             const db = await getDBConnection();
-            const storedTodoItems = await listCandidates(db);
+            const storedItems = await listCandidates(db);
+            console.log(storedItems);
 
-            if (storedTodoItems.length) {
-                setCandidatesList(storedTodoItems);
+            if (storedItems.length) {
+                setCandidatesList(storedItems);
                 setContainVotes(true);
             }
         } catch (error) {
@@ -43,13 +46,21 @@ export default function Home() {
             <TextVote>
                 Voting Machine v.1🔥
             </TextVote>
-            <Button onPress={() => handleNavigate()}>
-                Votar!
-            </Button>
+
             {isContainVotes ?
+                <>
+                    <Button onPress={() => handleNavigate()}>
+                        Votar!
+                    </Button>
+                    <Button onPress={() => setShowModal(true)}>
+                        Resultado
+                    </Button> 
+                </>
+                :
                 <Button onPress={() => handleNavigate()}>
-                    Resultado
-                </Button> : false}
+                    Votar!
+                </Button>}
+            {isShowModal && <ModalCandidates candidates={[]} />}    
         </Container>
     );
 }

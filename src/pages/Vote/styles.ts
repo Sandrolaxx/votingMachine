@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import LottieView from "lottie-react-native";
+import AnimatedLottieView from "lottie-react-native";
 
 export const Container = styled.SafeAreaView`
     height: 100%;
@@ -24,7 +24,7 @@ export const LoadingText = styled.Text`
     color: #9606CF;
     `;
 
-export const LottieFile = styled(LottieView)`
+export const LottieFile = styled(AnimatedLottieView)`
     height: 60%;
     margin-top: 14%;
     margin-left: 12%;

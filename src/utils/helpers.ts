@@ -68,3 +68,16 @@ export async function handleUpdateVotes(votedList: Candidate[]) {
     }
 
 }
+
+export function getWinners(candidates: Candidate[]): Candidate[] {
+    const winners: Candidate[] = [];
+    const roles = getEnumRoleElements();
+
+    roles.forEach(role => {
+        const candidatesInRole = candidates.filter(candidate => isSameRole(candidate.role, role));
+        
+        winners.push(firstElement(candidatesInRole.sort(candidate => candidate.votesNumber)));
+    });
+
+    return winners;
+}

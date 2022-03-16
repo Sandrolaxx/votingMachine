@@ -11,6 +11,7 @@ export interface InputProps {
 
 export interface ModalProps {
     candidates: Candidate[];
+    handleFinishVote?: Function;
 }
 
 export type Candidates = {

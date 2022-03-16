@@ -10,7 +10,6 @@ import { Container, LottieFile, TextVote } from "./styles";
 export default function Home() {
     const navigation = useNavigation<any>();
     const [isContainVotes, setContainVotes] = useState(false);
-    const [isShowModal, setShowModal] = useState(false);
     const [candidatesList, setCandidatesList] = useState<Candidate[]>([]);
 
     useEffect(() => {
@@ -18,14 +17,17 @@ export default function Home() {
     }, [useIsFocused()]);
 
     function handleNavigate() {
-        navigation.navigate("Vote", {isContainVotes});
+        navigation.navigate("Vote", { isContainVotes });
+    }
+    
+    function handleFinishVote() {
+        navigation.navigate("Results", { candidatesList });
     }
 
     async function loadDataCallback() {
         try {
             const db = await getDBConnection();
             const storedItems = await listCandidates(db);
-            console.log(storedItems);
 
             if (storedItems.length) {
                 setCandidatesList(storedItems);
@@ -47,20 +49,12 @@ export default function Home() {
                 Voting Machine v.1🔥
             </TextVote>
 
-            {isContainVotes ?
-                <>
-                    <Button onPress={() => handleNavigate()}>
-                        Votar!
-                    </Button>
-                    <Button onPress={() => setShowModal(true)}>
-                        Resultado
-                    </Button> 
-                </>
-                :
-                <Button onPress={() => handleNavigate()}>
-                    Votar!
-                </Button>}
-            {isShowModal && <ModalCandidates candidates={[]} />}    
+            <Button onPress={() => handleNavigate()}>
+                Votar!
+            </Button>
+            {isContainVotes &&
+                <ModalCandidates candidates={[]} handleFinishVote={handleFinishVote} />
+            }
         </Container>
     );
 }

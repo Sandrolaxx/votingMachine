@@ -4,8 +4,13 @@ import { ModalProps } from "../../utils/types";
 import Button from "../Button";
 import { Container, LineSeparator, ModalArea, ModalButtonArea, ModalText, ModalTextArea } from "./styles";
 
-export default function ModalCandidates({ candidates }: ModalProps) {
+export default function ModalCandidates({ candidates, handleFinishVote }: ModalProps) {
     const [modalVisible, setModalVisible] = useState(false);
+
+    function finishVotes() {
+        setModalVisible(!modalVisible);
+        handleFinishVote!();
+    };
 
     return (
         <Container>
@@ -43,7 +48,7 @@ export default function ModalCandidates({ candidates }: ModalProps) {
                         {candidates.length ?
                             false
                             :
-                            <Button onPress={() => setModalVisible(!modalVisible)}>
+                            <Button onPress={() => finishVotes()}>
                                 SIM
                             </Button>}
                         <Button onPress={() => setModalVisible(!modalVisible)}>
@@ -52,9 +57,14 @@ export default function ModalCandidates({ candidates }: ModalProps) {
                     </ModalButtonArea>
                 </ModalArea>
             </Modal>
+            {candidates.length ?
                 <Pressable onPress={() => setModalVisible(true)}>
                     <ModalText>ℹ️ Lista de Candidatos</ModalText>
                 </Pressable>
+                :
+                <Button onPress={() => setModalVisible(true)}>
+                    Resultado
+                </Button>}
         </Container>
     );
 }

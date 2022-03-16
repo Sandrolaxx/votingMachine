@@ -53,7 +53,7 @@ export async function handleUpdateVotes(votedList: Candidate[]) {
                         && isContainCandidate === false ? isContainCandidate = true : false);
                 
                 if (isContainCandidate) {
-                    await updateVotes(db, candidate);
+                    await updateVotes(db, firstElement(storedItems.filter(c => c.code === candidate.code)));
                 } else {
                     newVotedCandidates.push(candidate);
                 }

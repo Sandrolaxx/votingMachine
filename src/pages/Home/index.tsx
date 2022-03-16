@@ -4,13 +4,11 @@ import votingAnimation from "../../assets/votingAnimation.json";
 import Button from "../../components/Button";
 import ModalCandidates from "../../components/ModalCandidates";
 import { getDBConnection, listCandidates } from "../../services/SQLiteConnection";
-import { Candidate } from "../../utils/types";
 import { Container, LottieFile, TextVote } from "./styles";
 
 export default function Home() {
     const navigation = useNavigation<any>();
     const [isContainVotes, setContainVotes] = useState(false);
-    const [candidatesList, setCandidatesList] = useState<Candidate[]>([]);
 
     useEffect(() => {
         loadDataCallback();
@@ -21,7 +19,7 @@ export default function Home() {
     }
     
     function handleFinishVote() {
-        navigation.navigate("Results", { candidatesList });
+        navigation.navigate("Results");
     }
 
     async function loadDataCallback() {
@@ -30,8 +28,9 @@ export default function Home() {
             const storedItems = await listCandidates(db);
 
             if (storedItems.length) {
-                setCandidatesList(storedItems);
                 setContainVotes(true);
+            } else {
+                setContainVotes(false);
             }
         } catch (error) {
             console.error(error);

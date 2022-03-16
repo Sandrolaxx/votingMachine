@@ -15,8 +15,15 @@ export const ResultTitle = styled.Text`
 `
 
 export const ResultText = styled.Text`
-    font-size: 22px;
-    color: #fff;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #9606CF;
+`
+
+export const LineSeparator = styled.Text`
+    border-top-color: #D19EF3;
+    border-top-width: 1.5px;
+    margin-top: 14px;
 `
 
 export const LottieFile = styled(AnimatedLottieView)`

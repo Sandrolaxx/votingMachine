@@ -1,7 +1,8 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import confetiAnimation from "../../assets/confeti.json";
-import { getDBConnection, listCandidates } from "../../services/SQLiteConnection";
+import GoBackArrow from "../../components/GoBackArrow";
+import { deleteAllVotes, getDBConnection, listCandidates } from "../../services/SQLiteConnection";
 import { getWinnersAndDraws, resolveDraws } from "../../utils/helpers";
 import { Candidate, EnumRole } from "../../utils/types";
 import { Container, ContainerScroll, LineSeparator, LottieFile, ResultText, ResultTitle, ResultView } from "./styles";
@@ -38,9 +39,12 @@ export default function Results() {
             const db = await getDBConnection();
             const storedItems = await listCandidates(db);
 
+            await deleteAllVotes(db);
+
             if (storedItems.length) {
                 return storedItems;
             }
+
         } catch (error) {
             console.error(error);
         }
@@ -48,6 +52,7 @@ export default function Results() {
 
     return (
         <ContainerScroll>
+            <GoBackArrow />
             <LottieFile
                 source={confetiAnimation}
                 loop={false}
@@ -70,8 +75,8 @@ export default function Results() {
                                 <LineSeparator />
                             </ResultView>
                         ))}
-                    </> 
-                    : 
+                    </>
+                    :
                     <ResultText>Carregando...</ResultText>
                 }
                 {draws.length ?

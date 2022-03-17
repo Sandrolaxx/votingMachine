@@ -10,11 +10,12 @@ export const ContainerScroll = styled(ScrollView)`
 
 export const Container = styled.View`
     align-items: center;
+    margin-top: 48px;
 `;
 
 export const ResultTitle = styled.Text`
     font-size: 32px;
-    margin: 6% 0px;
+    margin: 2% 0px;
     color: #9606CF;
 `
 

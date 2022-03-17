@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert } from "react-native";
 import loadingAnimation from "../../assets/loadingAnimation.json";
+import GoBackArrow from "../../components/GoBackArrow";
 import Input from "../../components/Input";
 import ModalCandidates from "../../components/ModalCandidates";
 import { firstElement, getEnumRoleElements, getUriCandidates, handleNewVote, handleUpdateVotes, isSameRole } from "../../utils/helpers";
@@ -25,7 +26,7 @@ export default function Vote({ route, navigation }: any) {
                 })
                 .catch(() => Alert.alert("Erro ao buscar dados dos candidatos!❌"))
                 .finally(() => isMounted ? setLoading(false) : false);
-        }, 1200);
+        }, 4200);
 
         return () => {
             isMounted = false;
@@ -47,13 +48,13 @@ export default function Vote({ route, navigation }: any) {
 
         if (enumRoles.length == index + 1) {
             votedList.push(vodtedCandidate);
-            
+
             isNewVote ? handleNewVote(votedList) : handleUpdateVotes(votedList);
-            
+
             navigation.goBack();
         } else {
             votedList.push(vodtedCandidate);
-    
+
             setVotedList(votedList);
             setIndex(index + 1);
         }
@@ -72,18 +73,21 @@ export default function Vote({ route, navigation }: any) {
                 </LoadingText>
             </Container>
             :
-            <Container>
-                <Header />
-                <TitleText>
-                    Informe o número do seu candidato para {enumRoles[index]}👇
-                </TitleText>
-                <ModalCandidates candidates={candidatesList.filter(
-                    candidate => isSameRole(candidate.role, enumRoles[index])
-                )} />
-                <Input
-                    headerText={"Informe o número do candidato"}
-                    handleVote={handleVote}
-                />
-            </Container>
+            <>
+                <GoBackArrow />
+                <Container>
+                    <Header />
+                    <TitleText>
+                        Informe o número do seu candidato para {enumRoles[index]}👇
+                    </TitleText>
+                    <ModalCandidates candidates={candidatesList.filter(
+                        candidate => isSameRole(candidate.role, enumRoles[index])
+                    )} />
+                    <Input
+                        headerText={"Informe o número do candidato"}
+                        handleVote={handleVote}
+                    />
+                </Container>
+            </>
     );
 }

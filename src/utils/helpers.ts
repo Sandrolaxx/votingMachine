@@ -69,15 +69,50 @@ export async function handleUpdateVotes(votedList: Candidate[]) {
 
 }
 
-export function getWinners(candidates: Candidate[]): Candidate[] {
-    const winners: Candidate[] = [];
+export function getWinnersAndDraws(candidates: Candidate[]): Candidate[] {
     const roles = getEnumRoleElements();
+    let winners: Candidate[] = [];
 
     roles.forEach(role => {
         const candidatesInRole = candidates.filter(candidate => isSameRole(candidate.role, role));
         
-        winners.push(firstElement(candidatesInRole.sort(candidate => candidate.votesNumber)));
+        const candidateWinner: Candidate = firstElement(candidatesInRole.sort((a,b) => sortByVotes(a,b)));
+        const candidatesInTie: Candidate[] = candidatesInRole.filter(candidate => candidate.votesNumber == candidateWinner.votesNumber);
+
+        if (candidatesInTie.length > 1) {
+            winners = winners.concat(candidatesInTie);
+        } else {
+            winners.push(candidateWinner);
+        }
+        
+    });
+    
+    return winners;
+}
+
+export function resolveDraws(candidates: Candidate[]): Candidate[] {
+    const roles = getEnumRoleElements();
+    let draws: Candidate[] = [];
+
+    roles.forEach(role => {
+        const candidatesInRole = candidates.filter(candidate => isSameRole(candidate.role, role));
+
+        if (candidatesInRole.length > 1) {
+            draws = draws.concat(candidatesInRole);
+        }
     });
 
-    return winners;
+    return draws;
+}
+
+export function sortByVotes(a: Candidate, b:Candidate) {
+    if (a.votesNumber > b.votesNumber) {
+        return -1;
+    }
+
+    if (a.votesNumber < b.votesNumber) {
+        return 1;
+    }
+
+    return 0;
 }

@@ -1,21 +1,32 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
 import confetiAnimation from "../../assets/confeti.json";
-import { ModalText } from "../../components/ModalCandidates/styles";
 import { getDBConnection, listCandidates } from "../../services/SQLiteConnection";
-import { getWinners } from "../../utils/helpers";
-import { Candidate } from "../../utils/types";
-import { Container, LineSeparator, LottieFile, ResultText, ResultTitle } from "./styles";
+import { getWinnersAndDraws, resolveDraws } from "../../utils/helpers";
+import { Candidate, EnumRole } from "../../utils/types";
+import { Container, ContainerScroll, LineSeparator, LottieFile, ResultText, ResultTitle, ResultView } from "./styles";
 
-export default function Results({ navigation }: any) {
+export default function Results() {
     const [winners, setWinners] = useState<Candidate[]>([]);
+    const [draws, setDraws] = useState<Candidate[]>([]);
 
     useEffect(() => {
         let isMounted = true;
 
-        loadDataCallback().then(res => isMounted ? setWinners(getWinners(res!)) : false);
-        console.log(winners);
+        loadDataCallback().then(res => {
+            if (isMounted) {
+                const winnersAndDraws = getWinnersAndDraws(res!);
+
+                if (winnersAndDraws.length === 5) {
+                    setWinners(winnersAndDraws);
+                } else {
+                    const allDraws = resolveDraws(winnersAndDraws);
+
+                    setDraws(allDraws);
+                    setWinners(winnersAndDraws.filter(winner => !allDraws.includes(winner)))
+                }
+            }
+        });
 
         return () => {
             isMounted = false;
@@ -36,26 +47,54 @@ export default function Results({ navigation }: any) {
     };
 
     return (
-        <Container>
+        <ContainerScroll>
             <LottieFile
                 source={confetiAnimation}
                 loop={false}
                 autoPlay
             />
-            <ResultTitle>
-                Ganhadores🎉
-            </ResultTitle>
-            {winners.length ?
-                winners.map(candidate => (
-                    <View key={candidate.code}>
-                        <ResultText>
-                            {candidate.role.toString()} Eleito com total de {candidate.votesNumber} votos!
-                        </ResultText>
-                        <LineSeparator />
-                    </View>
-                ))
-                : <ResultText>Carregando...</ResultText>
-            }
-        </Container>
+            <Container>
+                {winners.length ?
+                    <>
+                        <ResultTitle>
+                            Ganhadores🎉
+                        </ResultTitle>
+                        {winners.map(candidate => (
+                            <ResultView key={candidate.code}>
+                                <ResultText>
+                                    {EnumRole[candidate.role]}
+                                </ResultText>
+                                <ResultText>
+                                    {candidate.name} eleito com total de {candidate.votesNumber} votos!
+                                </ResultText>
+                                <LineSeparator />
+                            </ResultView>
+                        ))}
+                    </> 
+                    : 
+                    <ResultText>Carregando...</ResultText>
+                }
+                {draws.length ?
+                    <>
+                        <ResultTitle>
+                            Segundo Turno😬
+                        </ResultTitle>
+                        {draws.map(candidate => (
+                            <ResultView key={candidate.code}>
+                                <ResultText>
+                                    {EnumRole[candidate.role]}
+                                </ResultText>
+                                <ResultText>
+                                    {candidate.name} - {candidate.votesNumber} votos
+                                </ResultText>
+                                <LineSeparator />
+                            </ResultView>
+                        ))}
+                    </>
+                    :
+                    false
+                }
+            </Container>
+        </ContainerScroll>
     );
 }

@@ -50,8 +50,6 @@ export async function saveVotes(db: SQLiteDatabase, candidates: Candidate[]) {
         candidates.map(c => `('${c.name}', '${c.role}', 
             '${c.politicalParty}', ${c.code}, ${c.votesNumber})`).join(",");
     
-    console.log(sqlQuery);
-
     return db.executeSql(sqlQuery);
 }
 
@@ -60,8 +58,6 @@ export async function updateVotes(db: SQLiteDatabase, candidate: Candidate) {
                         SET votesNumber = ${candidate.votesNumber + 1}  
                       WHERE code = ${candidate.code}` ;
     
-    console.log(sqlQuery);
-
     return db.executeSql(sqlQuery);
 }
 

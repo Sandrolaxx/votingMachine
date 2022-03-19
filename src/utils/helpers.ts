@@ -38,12 +38,10 @@ export async function handleNewVote(votedList: Candidate[]) {
 }
 
 export async function handleUpdateVotes(votedList: Candidate[]) {
-
-    const newVotedCandidates: Candidate[] = [];
-
+    
     try {
+        const newVotedCandidates: Candidate[] = [];
         const db = await getDBConnection();
-
         const storedItems = await listCandidates(db);
 
         if (storedItems.length) {
@@ -115,4 +113,16 @@ export function sortByVotes(a: Candidate, b:Candidate) {
     }
 
     return 0;
+}
+
+export function getBlankNullCandidate(isBlank: boolean): Candidate {
+    const blankNullCandidate: Candidate = {
+        code: isBlank ? 1 : 2,
+        name: isBlank ? "Branco" : "Nulo",
+        politicalParty: "NULO/BRANCO",
+        role: EnumRole.DEPUTADO_ESTADUAL,
+        votesNumber: 0
+    };
+
+    return blankNullCandidate;
 }

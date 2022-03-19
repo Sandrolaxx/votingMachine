@@ -59,7 +59,7 @@ export default function Results() {
                 autoPlay
             />
             <Container>
-                {winners.length ?
+                {winners.length > 0 &&
                     <>
                         <ResultTitle>
                             Ganhadores🎉
@@ -76,8 +76,6 @@ export default function Results() {
                             </ResultView>
                         ))}
                     </>
-                    :
-                    <ResultText>Carregando...</ResultText>
                 }
                 {draws.length ?
                     <>

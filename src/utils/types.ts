@@ -2,6 +2,7 @@ import { RectButtonProperties } from "react-native-gesture-handler";
 
 export interface ButtonProps extends RectButtonProperties {
     children: string;
+    shadow?: boolean;
 }
 
 export interface InputProps {
@@ -10,8 +11,10 @@ export interface InputProps {
 }
 
 export interface ModalProps {
-    candidates: Candidate[];
+    candidates?: Candidate[];
     handleFinishVote?: Function;
+    showResultBtn?: boolean;
+    showBlankNullBtn?: boolean;
 }
 
 export type Candidates = {

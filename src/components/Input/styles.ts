@@ -7,7 +7,7 @@ export const Container = styled.View`
 
 export const InputVote = styled.TextInput`
     border-radius: 12px;
-    height: 50px;
+    height: 52px;
     width: 70px;
     background-color: #f5f5f5;
     font-size: 22px;

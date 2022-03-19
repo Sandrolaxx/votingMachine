@@ -1,16 +1,22 @@
 import React, { useState } from "react";
-import { Modal, Pressable, View } from "react-native";
+import { Modal, View } from "react-native";
 import { ModalProps } from "../../utils/types";
 import Button from "../Button";
-import { Container, LineSeparator, ModalArea, ModalButtonArea, ModalText, ModalTextArea } from "./styles";
+import { Container, LineSeparator, ModalArea, ModalButtonArea, ModalPressable, ModalText, ModalTextArea } from "./styles";
 
-export default function ModalCandidates({ candidates, handleFinishVote }: ModalProps) {
+export default function ModalCandidates({ candidates, showResultBtn, showBlankNullBtn, handleFinishVote }: ModalProps) {
     const [modalVisible, setModalVisible] = useState(false);
+    const [isBlankVote, setBlankVote] = useState(false);
 
-    function finishVotes() {
+    function handlePropsFunction() {
         setModalVisible(!modalVisible);
         handleFinishVote!();
     };
+
+    function handleShowBlankNullVote(isBlankVote: boolean) {
+        setBlankVote(isBlankVote);
+        setModalVisible(true);
+    }
 
     return (
         <Container>
@@ -23,7 +29,7 @@ export default function ModalCandidates({ candidates, handleFinishVote }: ModalP
                 }} >
                 <ModalArea>
                     <ModalTextArea>
-                        {candidates.length ?
+                        {candidates != undefined ?
                             candidates.map(candidate => (
                                 <View key={candidate.code}>
                                     <ModalText>
@@ -40,31 +46,43 @@ export default function ModalCandidates({ candidates, handleFinishVote }: ModalP
                             ))
                             :
                             <ModalText>
-                                Deseja mesmo realizar a apuração dos votos??🤔
+                                {showResultBtn && 'Deseja mesmo realizar a apuração dos votos??🤔'}
+                                {showBlankNullBtn && isBlankVote && 'Deseja mesmo realizar o voto em BRANCO!??🤔'}
+                                {showBlankNullBtn && !isBlankVote && 'Deseja mesmo ANULAR o voto!??🤔'}
                             </ModalText>
                         }
                     </ModalTextArea>
                     <ModalButtonArea>
-                        {candidates.length ?
-                            false
-                            :
-                            <Button onPress={() => finishVotes()}>
+                        {(showResultBtn || showBlankNullBtn) &&
+                            <Button onPress={() => handlePropsFunction()}>
                                 SIM
                             </Button>}
                         <Button onPress={() => setModalVisible(!modalVisible)}>
-                            {candidates.length ? `FECHAR` : `NÃO`}
+                            {candidates != undefined ? "FECHAR" : "NÃO"}
                         </Button>
                     </ModalButtonArea>
                 </ModalArea>
             </Modal>
-            {candidates.length ?
-                <Pressable onPress={() => setModalVisible(true)}>
+            {candidates != undefined &&
+                <ModalPressable onPress={() => setModalVisible(true)}>
                     <ModalText>ℹ️ Lista de Candidatos</ModalText>
-                </Pressable>
-                :
+                </ModalPressable>
+            }
+            {showResultBtn &&
                 <Button onPress={() => setModalVisible(true)}>
                     Resultado
-                </Button>}
+                </Button>
+            }
+            {showBlankNullBtn &&
+                <>
+                    <Button shadow onPress={() => handleShowBlankNullVote(false)}>
+                        Anular
+                    </Button>
+                    <Button shadow onPress={() => handleShowBlankNullVote(true)}>
+                        Branco
+                    </Button>
+                </>
+            }
         </Container>
     );
 }

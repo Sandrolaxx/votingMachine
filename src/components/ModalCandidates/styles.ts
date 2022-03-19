@@ -1,7 +1,6 @@
 import styled from "styled-components/native";
 
 export const Container = styled.View`
-    margin-top: 4%;
     justify-content: center;
     align-items: center;
 `;
@@ -21,9 +20,14 @@ export const ModalTextArea = styled.View`
     width: 100%;
 `
 
+export const ModalPressable = styled.Pressable`
+    margin-top: 4%;
+`
+
 export const ModalText = styled.Text`
     font-size: 18px;
     color: #9606CF;
+    text-align: center;
 `
 
 export const LineSeparator = styled.Text`

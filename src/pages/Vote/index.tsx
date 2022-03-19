@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert } from "react-native";
 import loadingAnimation from "../../assets/loadingAnimation.json";
+import Button from "../../components/Button";
 import GoBackArrow from "../../components/GoBackArrow";
 import Input from "../../components/Input";
 import ModalCandidates from "../../components/ModalCandidates";
@@ -60,6 +61,10 @@ export default function Vote({ route, navigation }: any) {
         }
     }
 
+    function handleNullBlankVote(isBlankVote: boolean) {
+
+    }
+
     return (
         isLoading ?
             <Container>
@@ -87,6 +92,7 @@ export default function Vote({ route, navigation }: any) {
                         headerText={"Informe o número do candidato"}
                         handleVote={handleVote}
                     />
+                    <ModalCandidates showBlankNullBtn handleFinishVote={handleNullBlankVote} />
                 </Container>
             </>
     );

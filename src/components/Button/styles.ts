@@ -1,10 +1,10 @@
 import styled from "../../../node_modules/styled-components/native";
 
 export const Container = styled.TouchableOpacity`
-    height: 50px;
+    height: 52px;
     width: 142px;
-    background: #9606CF;
-    border-radius: 15px;
+    background: ${props => props.shadow ? "#4e026d" : "#9606CF"};
+    border-radius: 14px;
     justify-content: center;
     align-items: center;
     margin: 16% 4% 0px 4%;

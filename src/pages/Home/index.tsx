@@ -52,7 +52,7 @@ export default function Home() {
                 Votar!
             </Button>
             {isContainVotes &&
-                <ModalCandidates candidates={[]} handleFinishVote={handleFinishVote} />
+                <ModalCandidates showResultBtn handleFinishVote={handleFinishVote} />
             }
         </Container>
     );

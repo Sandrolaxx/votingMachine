@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Alert } from "react-native";
 import loadingAnimation from "../../assets/loadingAnimation.json";
-import Button from "../../components/Button";
 import GoBackArrow from "../../components/GoBackArrow";
 import Input from "../../components/Input";
 import ModalCandidates from "../../components/ModalCandidates";
-import { firstElement, getEnumRoleElements, getUriCandidates, handleNewVote, handleUpdateVotes, isSameRole } from "../../utils/helpers";
 import { Candidate, EnumRole } from "../../utils/types";
 import { Container, Header, LoadingText, LottieFile, TitleText } from "./styles";
+import {
+    firstElement, getBlankOrNullCandidate, getEnumRoleElements, getUriCandidates,
+    handleNewVote, handleUpdateVotes, isSameRole, validCandidate
+} from "../../utils/utils";
 
 export default function Vote({ route, navigation }: any) {
+    const enumRoles: EnumRole[] = getEnumRoleElements();
+    const isNewVote = !route.params.isContainVotes;
     const [index, setIndex] = useState(0);
     const [isLoading, setLoading] = useState(true);
     const [votedList, setVotedList] = useState<Candidate[]>([]);
     const [candidatesList, setCandidatesList] = useState<Candidate[]>([]);
-    const enumRoles: EnumRole[] = getEnumRoleElements();
-    const isNewVote = !route.params.isContainVotes;
 
     useEffect(() => {
         let isMounted = true;
@@ -34,27 +36,24 @@ export default function Vote({ route, navigation }: any) {
         }
     }, []);
 
-    async function handleVote(candidateCode: number) {
-        const vodtedCandidate = firstElement(candidatesList.filter(candidate => candidate.code == candidateCode));
+    async function handleVote(candidateCode: number, isNullBlankVote: boolean) {
+        const votedCandidate = firstElement(candidatesList.filter(candidate => candidate.code == candidateCode));
+        const isLastIndex = enumRoles.length == index + 1;
 
-        if (vodtedCandidate == undefined) {
-            Alert.alert("Número de candidato informado inválido!❌");
-            return;
-        } else if (!isSameRole(vodtedCandidate.role, enumRoles[index])) {
-            Alert.alert(`Número candidato inválido para o cargo de ${enumRoles[index]}!🤯`);
+        if (!validCandidate(votedCandidate, enumRoles[index], isNullBlankVote)) {
             return;
         }
 
-        vodtedCandidate.votesNumber = 1;
+        votedCandidate.votesNumber = 1;
 
-        if (enumRoles.length == index + 1) {
-            votedList.push(vodtedCandidate);
+        if (isLastIndex) {
+            votedList.push(votedCandidate);
 
             isNewVote ? handleNewVote(votedList) : handleUpdateVotes(votedList);
 
             navigation.goBack();
         } else {
-            votedList.push(vodtedCandidate);
+            votedList.push(votedCandidate);
 
             setVotedList(votedList);
             setIndex(index + 1);
@@ -62,7 +61,13 @@ export default function Vote({ route, navigation }: any) {
     }
 
     function handleNullBlankVote(isBlankVote: boolean) {
+        const nullOrBlankCandidate = getBlankOrNullCandidate(isBlankVote, enumRoles[index]);
 
+        if (!candidatesList.includes(nullOrBlankCandidate)) {
+            candidatesList.push(nullOrBlankCandidate);
+        }
+
+        handleVote(nullOrBlankCandidate.code, true);
     }
 
     return (

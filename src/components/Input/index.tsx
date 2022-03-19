@@ -12,7 +12,7 @@ export default function Input({ headerText,  handleVote}: InputProps) {
         Keyboard.dismiss();
         setCandidateCode(undefined);
 
-        handleVote(candidateCode);
+        handleVote(candidateCode, false);
     }
 
     return (

@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { getDBConnection, listCandidates, saveVotes, updateVotes } from "../services/SQLiteConnection";
 import { Candidate, EnumRole } from "./types";
 
@@ -38,7 +39,6 @@ export async function handleNewVote(votedList: Candidate[]) {
 }
 
 export async function handleUpdateVotes(votedList: Candidate[]) {
-    
     try {
         const newVotedCandidates: Candidate[] = [];
         const db = await getDBConnection();
@@ -47,9 +47,9 @@ export async function handleUpdateVotes(votedList: Candidate[]) {
         if (storedItems.length) {
             votedList.map(async candidate => {
                 let isContainCandidate = false;
-                storedItems.forEach(c => c.code === candidate.code 
-                        && isContainCandidate === false ? isContainCandidate = true : false);
-                
+                storedItems.forEach(c => c.code === candidate.code
+                    && isContainCandidate === false ? isContainCandidate = true : false);
+
                 if (isContainCandidate) {
                     await updateVotes(db, firstElement(storedItems.filter(c => c.code === candidate.code)));
                 } else {
@@ -64,7 +64,6 @@ export async function handleUpdateVotes(votedList: Candidate[]) {
     } catch (error) {
         console.error(error);
     }
-
 }
 
 export function getWinnersAndDraws(candidates: Candidate[]): Candidate[] {
@@ -73,8 +72,8 @@ export function getWinnersAndDraws(candidates: Candidate[]): Candidate[] {
 
     roles.forEach(role => {
         const candidatesInRole = candidates.filter(candidate => isSameRole(candidate.role, role));
-        
-        const candidateWinner: Candidate = firstElement(candidatesInRole.sort((a,b) => sortByVotes(a,b)));
+
+        const candidateWinner: Candidate = firstElement(candidatesInRole.sort((a, b) => sortByVotes(a, b)));
         const candidatesInTie: Candidate[] = candidatesInRole.filter(candidate => candidate.votesNumber == candidateWinner.votesNumber);
 
         if (candidatesInTie.length > 1) {
@@ -82,9 +81,9 @@ export function getWinnersAndDraws(candidates: Candidate[]): Candidate[] {
         } else {
             winners.push(candidateWinner);
         }
-        
+
     });
-    
+
     return winners;
 }
 
@@ -103,7 +102,7 @@ export function resolveDraws(candidates: Candidate[]): Candidate[] {
     return draws;
 }
 
-export function sortByVotes(a: Candidate, b:Candidate) {
+export function sortByVotes(a: Candidate, b: Candidate) {
     if (a.votesNumber > b.votesNumber) {
         return -1;
     }
@@ -115,14 +114,57 @@ export function sortByVotes(a: Candidate, b:Candidate) {
     return 0;
 }
 
-export function getBlankNullCandidate(isBlank: boolean): Candidate {
+export function getBlankOrNullCandidate(isBlank: boolean, enumRole: EnumRole): Candidate {
     const blankNullCandidate: Candidate = {
-        code: isBlank ? 1 : 2,
+        code: getNullBalnkCandidateCode(enumRole, isBlank),
         name: isBlank ? "Branco" : "Nulo",
-        politicalParty: "NULO/BRANCO",
-        role: EnumRole.DEPUTADO_ESTADUAL,
+        politicalParty: isBlank ? "Branco" : "Nulo",
+        role: enumRole,
         votesNumber: 0
     };
 
     return blankNullCandidate;
+}
+
+export function validCandidate(votedCandidate: Candidate, enumRole: EnumRole, isBlankNullVote: boolean): boolean {
+    if (votedCandidate == undefined) {
+        Alert.alert("Número de candidato informado inválido!❌");
+        return false;
+    } else if (!isSameRole(votedCandidate.role, enumRole)
+        && !isBlankNullVote) {
+        Alert.alert(`Número candidato inválido para o cargo de ${enumRole}!🤯`);
+        return false;
+    }
+    
+    return true;
+}
+
+function getNullBalnkCandidateCode(enumRole: EnumRole, isBlank: boolean) {
+    if (isBlank) {
+        switch (enumRole) {
+            case EnumRole.PRESIDENTE:
+                return 1;
+            case EnumRole.SENADOR:
+                return 2;
+            case EnumRole.GOVERNADOR:
+                return 3;
+            case EnumRole.DEPUTADO_FEDERAL:
+                return 4;
+            case EnumRole.DEPUTADO_ESTADUAL:
+                return 5;
+        }
+    } else {
+        switch (enumRole) {
+            case EnumRole.PRESIDENTE:
+                return 6;
+            case EnumRole.SENADOR:
+                return 7;
+            case EnumRole.GOVERNADOR:
+                return 8;
+            case EnumRole.DEPUTADO_FEDERAL:
+                return 9;
+            case EnumRole.DEPUTADO_ESTADUAL:
+                return 10;
+        }
+    }
 }

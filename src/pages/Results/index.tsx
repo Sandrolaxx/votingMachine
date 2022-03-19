@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import confetiAnimation from "../../assets/confeti.json";
 import GoBackArrow from "../../components/GoBackArrow";
 import { deleteAllVotes, getDBConnection, listCandidates } from "../../services/SQLiteConnection";
-import { getWinnersAndDraws, resolveDraws } from "../../utils/helpers";
 import { Candidate, EnumRole } from "../../utils/types";
+import { getWinnersAndDraws, resolveDraws } from "../../utils/utils";
 import { Container, ContainerScroll, LineSeparator, LottieFile, ResultText, ResultTitle, ResultView } from "./styles";
 
 export default function Results() {

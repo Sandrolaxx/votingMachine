@@ -10,7 +10,7 @@ export default function ModalCandidates({ candidates, showResultBtn, showBlankNu
 
     function handlePropsFunction() {
         setModalVisible(!modalVisible);
-        handleFinishVote!();
+        handleFinishVote!(isBlankVote);
     };
 
     function handleShowBlankNullVote(isBlankVote: boolean) {

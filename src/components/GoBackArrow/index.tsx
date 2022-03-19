@@ -1,8 +1,7 @@
 import React from "react";
-import { ArrowArea, Container } from "./styles";
-import ArrowIcon from '../../assets/icons/arrow.svg';
 import { useNavigation } from "@react-navigation/native";
-
+import ArrowIcon from '../../assets/icons/arrow.svg';
+import { ArrowArea, Container } from "./styles";
 
 export default function GoBackArrow() {
     const navigation = useNavigation();

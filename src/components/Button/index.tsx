@@ -1,5 +1,5 @@
 import React from "react";
-import { ButtonProps } from "../../utils/types";
+import { ButtonProps } from "../../util/types";
 import { Container, ButtonText } from "./styles";
 
 export default function Button({ children, shadow, ...rest }: ButtonProps) {

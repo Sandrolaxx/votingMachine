@@ -4,12 +4,12 @@ import loadingAnimation from "../../assets/loadingAnimation.json";
 import GoBackArrow from "../../components/GoBackArrow";
 import Input from "../../components/Input";
 import ModalCandidates from "../../components/ModalCandidates";
-import { Candidate, EnumRole } from "../../utils/types";
+import { Candidate, EnumRole } from "../../util/types";
 import { Container, Header, LoadingText, LottieFile, TitleText } from "./styles";
 import {
     firstElement, getBlankOrNullCandidate, getEnumRoleElements, getUriCandidates,
     handleNewVote, handleUpdateVotes, isSameRole, validCandidate
-} from "../../utils/utils";
+} from "../../util/utils";
 
 export default function Vote({ route, navigation }: any) {
     const enumRoles: EnumRole[] = getEnumRoleElements();

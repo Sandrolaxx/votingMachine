@@ -6,8 +6,8 @@ export function getEnumRoleElements() {
     let elements: EnumRole[] = [];
 
     elements.push(EnumRole.PRESIDENTE);
-    elements.push(EnumRole.SENADOR);
     elements.push(EnumRole.GOVERNADOR);
+    elements.push(EnumRole.SENADOR);
     elements.push(EnumRole.DEPUTADO_FEDERAL);
     elements.push(EnumRole.DEPUTADO_ESTADUAL);
 
@@ -19,6 +19,10 @@ export function firstElement(list: any[]) {
         && list.length > 0) {
         return list[0];
     }
+}
+
+export function isEmpty(array: any[]) {
+    return array != undefined && array.length == 0;
 }
 
 export function getUriCandidates() {
@@ -68,18 +72,21 @@ export async function handleUpdateVotes(votedList: Candidate[]) {
 
 export function getWinnersAndDraws(candidates: Candidate[]): Candidate[] {
     const roles = getEnumRoleElements();
+    const nullOrBlank = "BRANCO" || "NULO";
     let winners: Candidate[] = [];
 
     roles.forEach(role => {
-        const candidatesInRole = candidates.filter(candidate => isSameRole(candidate.role, role));
-
-        const candidateWinner: Candidate = firstElement(candidatesInRole.sort((a, b) => sortByVotes(a, b)));
-        const candidatesInTie: Candidate[] = candidatesInRole.filter(candidate => candidate.votesNumber == candidateWinner.votesNumber);
-
-        if (candidatesInTie.length > 1) {
-            winners = winners.concat(candidatesInTie);
-        } else {
-            winners.push(candidateWinner);
+        const candidatesInRole = candidates.filter(candidate => isSameRole(candidate.role, role) && candidate.name != nullOrBlank);
+        
+        if (candidatesInRole.length) {
+            const candidateWinner: Candidate = firstElement(candidatesInRole.sort((a, b) => sortByVotes(a, b)));
+            const candidatesInTie: Candidate[] = candidatesInRole.filter(candidate => candidate.votesNumber == candidateWinner.votesNumber);
+    
+            if (candidatesInTie.length > 1) {
+                winners = winners.concat(candidatesInTie);
+            } else {
+                winners.push(candidateWinner);
+            }
         }
 
     });
@@ -87,19 +94,37 @@ export function getWinnersAndDraws(candidates: Candidate[]): Candidate[] {
     return winners;
 }
 
-export function resolveDraws(candidates: Candidate[]): Candidate[] {
-    const roles = getEnumRoleElements();
-    let draws: Candidate[] = [];
+export function resolveDrawsSecundTurn(candidates: Candidate[], onlySecondTurn: boolean): Candidate[] {
+    const roles = onlySecondTurn ? getEnumRoleElements().slice(0, 2) : getEnumRoleElements().slice(2, 5);
+    let drawsSecundTurn: Candidate[] = [];
 
     roles.forEach(role => {
         const candidatesInRole = candidates.filter(candidate => isSameRole(candidate.role, role));
 
         if (candidatesInRole.length > 1) {
-            draws = draws.concat(candidatesInRole);
+            drawsSecundTurn = drawsSecundTurn.concat(candidatesInRole);
         }
     });
 
-    return draws;
+    return drawsSecundTurn;
+}
+
+export function resolveNullBlankVotes(candidates: Candidate[], onlyBlank: boolean): Candidate[] {
+    const roles = getEnumRoleElements();
+    const nullBlankType = onlyBlank ? "BRANCO" : "NULO";
+    let nullBlankVotes: Candidate[] = [];
+
+    roles.forEach(role => {
+        const candidatesInRole = candidates
+            .filter(candidate => isSameRole(candidate.role, role)
+                && candidate.name == nullBlankType);
+
+        if (candidatesInRole.length > 1) {
+            nullBlankVotes = nullBlankVotes.concat(candidatesInRole);
+        }
+    });
+
+    return nullBlankVotes;
 }
 
 export function sortByVotes(a: Candidate, b: Candidate) {
@@ -117,8 +142,8 @@ export function sortByVotes(a: Candidate, b: Candidate) {
 export function getBlankOrNullCandidate(isBlank: boolean, enumRole: EnumRole): Candidate {
     const blankNullCandidate: Candidate = {
         code: getNullBalnkCandidateCode(enumRole, isBlank),
-        name: isBlank ? "Branco" : "Nulo",
-        politicalParty: isBlank ? "Branco" : "Nulo",
+        name: isBlank ? "BRANCO" : "NULO",
+        politicalParty: isBlank ? "BRANCO" : "NULO",
         role: enumRole,
         votesNumber: 0
     };

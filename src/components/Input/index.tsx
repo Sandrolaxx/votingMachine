@@ -1,7 +1,7 @@
 import React from "react";
 import { SetStateAction, useState } from "react";
 import { Keyboard } from "react-native";
-import { InputProps } from "../../utils/types";
+import { InputProps } from "../../util/types";
 import Button from "../Button";
 import { HeaderTitle, InputVote, Container } from "./styles";
 

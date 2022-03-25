@@ -1,5 +1,5 @@
 import { enablePromise, openDatabase, SQLiteDatabase } from 'react-native-sqlite-storage';
-import { Candidate } from '../utils/types';
+import { Candidate } from '../util/types';
 
 const tableName = 'VT_MACHINE';
 
@@ -26,7 +26,7 @@ async function createTable(db: SQLiteDatabase) {
 };
 
 export async function listCandidates(db: SQLiteDatabase): Promise<Candidate[]> {
-
+    
     try {
         const candidates: Candidate[] = [];
         const results = await db.executeSql(`SELECT * FROM ${tableName}`);

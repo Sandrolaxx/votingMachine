@@ -10,6 +10,12 @@ export interface InputProps {
     handleVote: Function;
 }
 
+export interface ResultVotesProps {
+    candidates: Candidate[];
+    headerText: string;
+    winners?: boolean;
+}
+
 export interface ModalProps {
     candidates?: Candidate[];
     handleFinishVote?: Function;

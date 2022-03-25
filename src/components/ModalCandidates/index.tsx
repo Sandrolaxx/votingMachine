@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal, View } from "react-native";
-import { ModalProps } from "../../utils/types";
+import { ModalProps } from "../../util/types";
 import Button from "../Button";
 import { Container, LineSeparator, ModalArea, ModalButtonArea, ModalPressable, ModalText, ModalTextArea } from "./styles";
 

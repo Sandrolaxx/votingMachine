@@ -16,7 +16,7 @@ Trata-se de uma aplicação que simula uma urna eletrônica que foi requisitada 
 
 * SplashScreen e Home
 
-![homeScreen](https://user-images.githubusercontent.com/61207420/160217349-6a3c5b9a-b3d8-424e-99dc-b79bdf30158f.gif)
+![homeScreen](https://user-images.githubusercontent.com/61207420/160254033-dd777ebf-9c80-439b-9b5b-c307d30d6504.gif)
 
 * Realizando votação
 

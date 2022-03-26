@@ -3,6 +3,7 @@ import styled from "../../../node_modules/styled-components/native"
 export const ResultTitle = styled.Text`
     font-size: 32px;
     margin: 2% 0px;
+    text-align: center;
     color: #9606CF;
 `
 

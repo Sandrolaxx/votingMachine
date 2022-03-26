@@ -77,11 +77,11 @@ export function getWinnersAndDraws(candidates: Candidate[]): Candidate[] {
 
     roles.forEach(role => {
         const candidatesInRole = candidates.filter(candidate => isSameRole(candidate.role, role) && candidate.name != nullOrBlank);
-        
+
         if (candidatesInRole.length) {
             const candidateWinner: Candidate = firstElement(candidatesInRole.sort((a, b) => sortByVotes(a, b)));
             const candidatesInTie: Candidate[] = candidatesInRole.filter(candidate => candidate.votesNumber == candidateWinner.votesNumber);
-    
+
             if (candidatesInTie.length > 1) {
                 winners = winners.concat(candidatesInTie);
             } else {
@@ -90,7 +90,7 @@ export function getWinnersAndDraws(candidates: Candidate[]): Candidate[] {
         }
 
     });
-
+    
     return winners;
 }
 
@@ -101,28 +101,25 @@ export function resolveDrawsSecundTurn(candidates: Candidate[], onlySecondTurn: 
     roles.forEach(role => {
         const candidatesInRole = candidates.filter(candidate => isSameRole(candidate.role, role));
 
-        if (candidatesInRole.length > 1) {
-            drawsSecundTurn = drawsSecundTurn.concat(candidatesInRole);
+        if (candidatesInRole.length) {
+            if (candidatesInRole.length > 1) {
+                drawsSecundTurn = drawsSecundTurn.concat(candidatesInRole);
+            }
         }
     });
-
+    
     return drawsSecundTurn;
 }
 
 export function resolveNullBlankVotes(candidates: Candidate[], onlyBlank: boolean): Candidate[] {
-    const roles = getEnumRoleElements();
     const nullBlankType = onlyBlank ? "BRANCO" : "NULO";
     let nullBlankVotes: Candidate[] = [];
 
-    roles.forEach(role => {
-        const candidatesInRole = candidates
-            .filter(candidate => isSameRole(candidate.role, role)
-                && candidate.name == nullBlankType);
+    const candidatesNullOrBlank = candidates.filter(candidate => candidate.name == nullBlankType);
 
-        if (candidatesInRole.length > 1) {
-            nullBlankVotes = nullBlankVotes.concat(candidatesInRole);
-        }
-    });
+    if (candidatesNullOrBlank.length) {
+        nullBlankVotes = nullBlankVotes.concat(candidatesNullOrBlank);
+    }
 
     return nullBlankVotes;
 }
@@ -160,8 +157,12 @@ export function validCandidate(votedCandidate: Candidate, enumRole: EnumRole, is
         Alert.alert(`Número candidato inválido para o cargo de ${enumRole}!🤯`);
         return false;
     }
-    
+
     return true;
+}
+
+export function getEnumValue(enumStringValue: string) {
+    return EnumRole[enumStringValue] != undefined ? EnumRole[enumStringValue] : enumStringValue;
 }
 
 function getNullBalnkCandidateCode(enumRole: EnumRole, isBlank: boolean) {

@@ -4,7 +4,6 @@ import styled from "../../../node_modules/styled-components/native";
 
 export const ContainerScroll = styled(ScrollView)`
     height: 100%;
-    width: 100%;
     background-color: #1D1D1D;
 `;
 
@@ -14,6 +13,13 @@ export const Container = styled.View`
 `;
 
 export const LottieFile = styled(AnimatedLottieView)`
-    height: 100%;
+    height: 780px;
     position: absolute;
 `;
+
+export const ResultTitle = styled.Text`
+    font-size: 32px;
+    margin-top: 50%;
+    text-align: center;
+    color: #9606CF;
+`

@@ -1,5 +1,6 @@
 import React from "react";
 import { EnumRole, ResultVotesProps } from "../../util/types";
+import { getEnumValue } from "../../util/utils";
 import { LineSeparator, ResultText, ResultTitle, ResultView } from "./styles";
 
 export default function ResultVotes(props: ResultVotesProps) {
@@ -11,7 +12,7 @@ export default function ResultVotes(props: ResultVotesProps) {
             {props.candidates.map(candidate => (
                 <ResultView key={candidate.code}>
                     <ResultText>
-                        {EnumRole[candidate.role]}
+                        {getEnumValue(candidate.role)}
                     </ResultText>
                     {props.winners ?
                         <ResultText>

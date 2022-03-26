@@ -6,7 +6,7 @@ import ResultVotes from "../../components/ResultVotes";
 import { deleteAllVotes, getDBConnection, listCandidates } from "../../services/SQLiteConnection";
 import { Candidate } from "../../util/types";
 import { getWinnersAndDraws, isEmpty, resolveDrawsSecundTurn, resolveNullBlankVotes } from "../../util/utils";
-import { Container, ContainerScroll, LottieFile } from "./styles";
+import { Container, ContainerScroll, LottieFile, ResultTitle } from "./styles";
 
 export default function Results() {
     const [winners, setWinners] = useState<Candidate[]>([]);
@@ -22,11 +22,12 @@ export default function Results() {
             if (isMounted) {
                 const winnersAndDraws = getWinnersAndDraws(res!);
                 const secondTurn = resolveDrawsSecundTurn(winnersAndDraws, true);
+                const draws = resolveDrawsSecundTurn(winnersAndDraws, false);
 
                 setSecondTurn(secondTurn);
-                setWinners(winnersAndDraws.filter(winner => !secondTurn.includes(winner)));
-                
-                setDraws(resolveDrawsSecundTurn(winnersAndDraws, false));
+                setWinners(winnersAndDraws.filter(winner => !secondTurn.concat(draws).includes(winner)));
+
+                setDraws(draws);
                 setBlankVotes(resolveNullBlankVotes(res!, true));
                 setNullVotes(resolveNullBlankVotes(res!, false));
             }
@@ -42,7 +43,7 @@ export default function Results() {
             const db = await getDBConnection();
             const storedItems = await listCandidates(db);
 
-            // await deleteAllVotes(db);
+            await deleteAllVotes(db);
 
             if (storedItems.length) {
                 return storedItems;
@@ -56,39 +57,49 @@ export default function Results() {
     return (
         <ContainerScroll>
             <GoBackArrow />
-            <LottieFile
-                source={confetiAnimation}
-                loop={false}
-                autoPlay
-            />
-            <Container>
-                {!isEmpty(winners) &&
-                    <ResultVotes
-                        candidates={winners}
-                        headerText={"Ganhadores🎉"}
-                        winners />
-                }
-                {!isEmpty(secondTurn) &&
-                    <ResultVotes
-                        candidates={secondTurn}
-                        headerText={"Segundo Turno😬"} />
-                }
-                {!isEmpty(draws) &&
-                    <ResultVotes
-                        candidates={draws}
-                        headerText={"Empates - Assume o mais👴"} />
-                }
-                {!isEmpty(blankVotes) &&
-                    <ResultVotes
-                        candidates={blankVotes}
-                        headerText={"Votos em Branco ⬜"} />
-                }
-                {!isEmpty(nullVotes) &&
-                    <ResultVotes
-                        candidates={nullVotes}
-                        headerText={"Votos Nulos❌"} />
-                }
-            </Container>
+            {!isEmpty(winners) || !isEmpty(secondTurn)
+                || !isEmpty(draws) || !isEmpty(nullVotes) || !isEmpty(blankVotes) ?
+                <>
+                    <LottieFile
+                        source={confetiAnimation}
+                        loop={false}
+                        autoPlay
+                    />
+                    <Container>
+                        {!isEmpty(winners) &&
+                            <ResultVotes
+                                candidates={winners}
+                                headerText={"Ganhadores🎉"}
+                                winners />
+                        }
+                        {!isEmpty(secondTurn) &&
+                            <ResultVotes
+                                candidates={secondTurn}
+                                headerText={"Segundo Turno😬"} />
+                        }
+                        {!isEmpty(draws) &&
+                            <ResultVotes
+                                candidates={draws}
+                                headerText={"Empate - Assume o mais👴"} />
+                        }
+                        {!isEmpty(blankVotes) &&
+                            <ResultVotes
+                                candidates={blankVotes}
+                                headerText={"Votos em Branco ⬜"} />
+                        }
+                        {!isEmpty(nullVotes) &&
+                            <ResultVotes
+                                candidates={nullVotes}
+                                headerText={"Votos Nulos❌"} />
+                        }
+                    </Container>
+                </>
+                :
+                <ResultTitle>
+                    Carregando...
+                </ResultTitle>
+            }
+
         </ContainerScroll>
     );
 }

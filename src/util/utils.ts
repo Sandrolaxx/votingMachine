@@ -1,6 +1,7 @@
 import { Alert } from "react-native";
 import { getDBConnection, listCandidates, saveVotes, updateVotes } from "../services/SQLiteConnection";
 import { Candidate, EnumRole } from "./types";
+import {API_BASE_URL, API_VERSION, API_PATH} from "@env";
 
 export function getEnumRoleElements() {
     let elements: EnumRole[] = [];
@@ -26,7 +27,7 @@ export function isEmpty(array: any[]) {
 }
 
 export function getUriCandidates() {
-    return "https://mocki.io/v1/2fdd9fc8-a7e3-4a36-a046-bed8f673d42f";
+    return API_BASE_URL + API_VERSION + API_PATH;
 }
 
 export function isSameRole(candidateRole: string, role: string) {

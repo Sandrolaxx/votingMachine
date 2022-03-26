@@ -13,10 +13,11 @@ Trata-se de uma aplicação que simula uma urna eletrônica que foi requisitada 
 ---
 
 ## 🖼🖌Telas do projeto
+<br/>
 
-* SplashScreen e Home
+###  SplashScreen e Home
 
-![homeScreen](https://user-images.githubusercontent.com/61207420/160254033-dd777ebf-9c80-439b-9b5b-c307d30d6504.gif)
+![homeScreen](https://user-images.githubusercontent.com/61207420/160255028-6a580769-8670-4204-9f09-44e064f96918.gif)
 
 * Realizando votação
 
